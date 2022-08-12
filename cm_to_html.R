@@ -7,20 +7,21 @@ library(rmarkdown)
 ds_file <- "indicadores cm.xlsx"
 df <- readxl::read_excel(ds_file, sheet = "Dados")
 data_base <- as.Date(df$data_base[1])
-foutput <- paste("indicadores cm ", format(data_base, format = "%Y-%m"), ".pdf", sep = "")
+foutput <- paste("indicadores cm ", format(data_base, format = "%Y-%m"), ".html", sep = "")
 print(getwd())
 print(foutput)
 
 rmarkdown::render(
   "indicadores_cm.Rmd",
-  output_dir = "C:\\Users\\Everton\\OneDrive\\Prefeitura\\2022\\Indicadores\\CM\\",
-  # output_dir = getwd(),
+  output_dir = paste(getwd(), "output", sep = "/"),
   output_file = foutput,
-  output_format = "pdf_document",
-  pdf_document(
+  clean = TRUE,
+  intermediates_dir = "cache",
+  output_format = html_document(
     toc = TRUE,
+    toc_depth = 6,
     number_sections = TRUE,
-    fig_caption = TRUE,
-    latex_engine = "pdflatex"
+    anchor_sections = TRUE,
+    fig_caption = TRUE
   )
 )

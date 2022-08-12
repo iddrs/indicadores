@@ -2,12 +2,13 @@
 options(
   encoding = "UTF-8",
   knitr.kable.NA = "",
-  knitr.kable.digits = 2,
-  knitr.kable.format = "latex"
+  knitr.kable.digits = 2
 )
 
+knitr::opts_chunk$set(cache = FALSE)
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(result = "hold")
+knitr::opts_chunk$set(fig.align = "center")
 
 if(!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
@@ -22,9 +23,10 @@ library(kableExtra)
 
 ```{r}
 app.table.default <- function(data, align = NULL, caption = NULL, format.args = list(big.mark = ".", decimal.mark =",", nsmall = 2), col.names = NULL) {
-  return(
-    knitr::kable(data, align=align, caption = caption, format.args = format.args, col.names = col.names)
-  )
+  tbl <- knitr::kable(data, align=align, caption = caption, format.args = format.args, col.names = col.names)
+  tbl <- kable_classic(tbl)
+  tbl <- kable_styling(tbl, position = "center", bootstrap_options = c("condensed"))
+  return(tbl)
 }
 
 app.plot.theming <- function(g) {
@@ -298,12 +300,13 @@ O cálculo dos valores estimados é feito tendo por base a despesa com folha de 
 Para o mês de dezembro, em vez da estimativa, é utilizado o valor efetivamente apurado no ano.
 
 ```{r}
+df$mes <- as.factor(df$mes)
 g <- ggplot(df) +
   ggtitle("Resultado Orçamentário") +
   geom_bar(aes(x = mes, y = valor, group = ano, fill = ano), stat = "identity", position = position_dodge(), na.rm = TRUE) +
   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary)) +
-  scale_x_discrete(limits = levels(unique(df$mes)))
+  scale_x_discrete(limits = df$mes)
 g <- app.plot.theming(g)
 g
 ```
@@ -362,6 +365,7 @@ Independência, RS, `r format(Sys.Date(), format = "%d de %B de %Y")`
 
 ***
 
+**Notas**
 
 
 [^1]: Limite dividido por 12 meses multiplicado pelo número de meses decorridos.
