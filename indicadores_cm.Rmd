@@ -62,7 +62,7 @@ ano_base <- format(data_base, format = "%Y")
 
 ---
 title: "Indicadores Fiscais e Gerenciais da Câmara de Vereadores"
-author: "Everton da Rosa"
+author: "Everton da Rosa (Contador CRC RS-076595/O-3)"
 date: "`r periodo`"
 ---
 
