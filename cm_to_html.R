@@ -20,6 +20,7 @@ rmarkdown::render(
   output_format = html_document(
     toc = TRUE,
     toc_depth = 6,
+    toc_float = TRUE,
     number_sections = TRUE,
     anchor_sections = TRUE,
     fig_caption = TRUE

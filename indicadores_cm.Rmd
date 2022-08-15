@@ -109,6 +109,7 @@ df$mes <- as.factor(df$mes)
 g <- ggplot(df, aes(x = mes, group = 1)) +
   ggtitle("Gasto Total (CF 1988)") +
   geom_bar(aes(y = vl_gasto_total_estimado, fill = "Gasto Total"), stat = "identity", position = "dodge", na.rm = TRUE) +
+  geom_text(aes(y = vl_gasto_total_estimado, label = indice_estimado), vjust = -0.5, color = app.color.primary, na.rm = TRUE) +
   geom_line(aes(y = vl_limite, color = "Limite"), na.rm = TRUE) +
   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
   scale_x_discrete(limits = df$mes) +
@@ -153,6 +154,7 @@ df$mes <- as.factor(df$mes)
 g <- ggplot(df, aes(x = mes, group = 1)) +
   ggtitle("Gasto com Folha de Pagamento (CF 1988)") +
   geom_bar(aes(y = vl_gasto_total_estimado, fill = "Gasto com Folha"), stat = "identity", position = "dodge", na.rm = TRUE) +
+  geom_text(aes(y = vl_gasto_total_estimado, label = indice_estimado), vjust = -0.5, color = app.color.primary, na.rm = TRUE) +
   geom_line(aes(y = vl_limite, color = "Limite"), na.rm = TRUE) +
   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
   scale_x_discrete(limits = df$mes) +
@@ -300,13 +302,12 @@ O cálculo dos valores estimados é feito tendo por base a despesa com folha de 
 Para o mês de dezembro, em vez da estimativa, é utilizado o valor efetivamente apurado no ano.
 
 ```{r}
-df$mes <- as.factor(df$mes)
 g <- ggplot(df) +
   ggtitle("Resultado Orçamentário") +
   geom_bar(aes(x = mes, y = valor, group = ano, fill = ano), stat = "identity", position = position_dodge(), na.rm = TRUE) +
   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary)) +
-  scale_x_discrete(limits = df$mes)
+  scale_x_discrete(limits = unique(df$mes))
 g <- app.plot.theming(g)
 g
 ```
