@@ -545,7 +545,7 @@ tbl
 data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
 data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
-colnames(data) <- c("Mês", paste(ano_base, "/", ano_anterior, "(R$)"), paste("Arrecadado / Previsto ", ano_base, "(R$)"), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto ", ano_base, "(%)"))
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Receita Total: Excesso/Frustração", col.names = colnames(data))
 tbl
 ```
@@ -571,13 +571,12 @@ data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
 colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
 data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
 data$tipo <- as.factor(data$tipo)
-# data
-g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
   ggtitle("Receita Total: valores acumulados") +
-  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  geom_line(aes(y = valor), na.rm = TRUE) +
   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
   scale_x_discrete(limits = unique(data$Mês)) +
-  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
 g <- app.plot.theming(g)
 g
 ```
@@ -608,7 +607,7 @@ tbl
 data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
 data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
-colnames(data) <- c("Mês", paste(ano_base, "/", ano_anterior, "(R$)"), paste("Arrecadado / Previsto ", ano_base, "(R$)"), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto ", ano_base, "(%)"))
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Receita Corrente: Excesso/Frustração", col.names = colnames(data))
 tbl
 ```
@@ -635,8 +634,57 @@ colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecad
 data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
 data$tipo <- as.factor(data$tipo)
 # data
-g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
   ggtitle("Receita Corrente: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Arrecadação Própria
+
+A arrecadação própria engloba aquelas receitas orçamentárias arrecadadas diretamente pelo município, ou seja, não são receitas advindas de transferências de outros entes e são decorrentes do esforço direto do órgão arrecadados e outros.
+
+```{r read_arrecadacao_propria}
+df <- readxl::read_excel(ds_file, sheet = "ArrecadacaoPropria", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_arrecadacao_propria_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Arrecadação Própria: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_arrecadacao_propria_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Arrecadação Própria: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_arrecadacao_propria_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Arrecadação Própria: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_arrecadacao_propria_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Arrecadação Própria: valores mensais") +
   geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
   scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
   scale_x_discrete(limits = unique(data$Mês)) +
@@ -645,3 +693,864 @@ g <- app.plot.theming(g)
 g
 ```
 
+```{r plot_arrecadacao_propria_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Arrecadação Própria: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferências Correntes
+
+```{r read_transf_corr}
+df <- readxl::read_excel(ds_file, sheet = "TransfCorr", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_corr_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_corr_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_corr_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_corr_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferências Correntes: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_corr_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferências Correntes: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### FPM – cota-mensal
+
+```{r read_fpm}
+df <- readxl::read_excel(ds_file, sheet = "FPM", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_fpm_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "FPM - cota mensal: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_fpm_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "FPM - cota mensal: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_fpm_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "FPM - cota mensal: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_fpm_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("FPM - cota mensal: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_fpm_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("FPM - cota mensal: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### ICMS
+
+```{r read_icms}
+df <- readxl::read_excel(ds_file, sheet = "ICMS", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_icms_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "ICMS: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_icms_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "ICMS: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_icms_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "ICMS: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_icms_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("ICMS: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_icms_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("ICMS: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferência do FUNDEB
+
+```{r read_transf_fundeb}
+df <- readxl::read_excel(ds_file, sheet = "TransfFUNDEB", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_fundeb_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferência do FUNDEB: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_fundeb_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferência do FUNDEB: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_fundeb_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferência do FUNDEB: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_fundeb_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferência do FUNDEB: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_fundeb_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferência do FUNDEB: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferências Correntes da Saúde
+
+```{r read_transf_saude}
+df <- readxl::read_excel(ds_file, sheet = "TransfSaude", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_saude_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes da Saúde: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_saude_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes da Saúde: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_saude_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes da Saúde: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_saude_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferências Correntes da Saúde: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_saude_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferências Correntes da Saúde: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferências Correntes da Educação
+
+```{r read_transf_educ}
+df <- readxl::read_excel(ds_file, sheet = "TransfEducacao", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_educ_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes da Educação: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_educ_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes da Educação: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_educ_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes da Educação: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_educ_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferências Correntes da Educação: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_educ_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferências Correntes da Educação: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferências Correntes da Assistência Social
+
+```{r read_transf_assist}
+df <- readxl::read_excel(ds_file, sheet = "TransfAssistSocial", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_assist_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes da Assistência Social: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_assist_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes da Assistência Social: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_assist_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes da Assistência Social: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_assist_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferências Correntes da Assistência Social: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_assist_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferências Correntes da Assistência Social: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferências Correntes Federais
+
+```{r read_transf_corr_fed}
+df <- readxl::read_excel(ds_file, sheet = "TransfFederal", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_corr_fed_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes Federais: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_corr_fed_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes Federais: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_corr_fed_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes Federais: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_corr_fed_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferências Correntes Federais: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_corr_fed_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferências Correntes Federais: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+### Transferências Correntes Estaduais
+
+```{r read_transf_corr_est}
+df <- readxl::read_excel(ds_file, sheet = "TransfEstadual", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_transf_corr_est_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes Estaduais: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_corr_est_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Transferências Correntes Estaduais: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_transf_corr_est_excesso}
+data <- select(df, mes, vl_var_ant, vl_var_prev,	var_ant,	var_prev)
+data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes Estaduais: Excesso/Frustração", col.names = colnames(data))
+tbl
+```
+
+```{r plot_transf_corr_est_mensal}
+data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Transferências Correntes Estaduais: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_transf_corr_est_acum}
+data <- select(df, mes, arrec_acum_ant, arrec_acum_atual, prev_acum_atual)
+colnames(data) <- c("Mês", paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base))
+data <- gather(data, tipo, valor, c(paste("Arrecadado em", ano_anterior), paste("Arrecadado em", ano_base), paste("Previsto para", ano_base)))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Transferências Correntes Estaduais: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+## Despesa
+
+Nesta seção serão apresentadas informações sobre os principais grupos de despesa, comparando os desempenhos mensal e acumulados com os valores previstos para o ano corrente e empenhados e os liquidados no ano anterior.
+
+### Despesa Total
+
+```{r read_despesa_total}
+df <- readxl::read_excel(ds_file, sheet = "DespesaTotal", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_despesa_total_mensal}
+data <- select(df, mes, emp_mes, liq_mes, prev_mes)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Total: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_total_acum}
+data <- select(df, mes, emp_acum, liq_acum, prev_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Total: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_total_diff}
+data <- select(df, mes, vl_emp_prev, vl_liq_prev, perc_emp_prev,	perc_liq_prev)
+data$perc_emp_prev <- percent(data$perc_emp_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+data$perc_liq_prev <- percent(data$perc_liq_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+colnames(data) <- c("Mês", "Empenhado (-) Previsto", "Liquidado (-) Previsto", "Empenhado / Previsto", "Liquidado / Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Despesa Total: previsto x despesa", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_total_arrec}
+data <- select(df, mes, arrec_acum,	perc_emp_arrec,	perc_liq_arrec)
+data$perc_emp_arrec <- percent(data$perc_emp_arrec, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+data$perc_liq_arrec <- percent(data$perc_liq_arrec, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+colnames(data) <- c("Mês", "Arrecadado", "Empenhado / Arrecadado", "Liquidado / Arrecadado")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Total: arrecadação x despesa", col.names = colnames(data))
+tbl
+```
+
+*Comparado com a arrecadação total*
+
+```{r plot_despesa_total_mensal}
+data <- select(df, mes, emp_mes, liq_mes, prev_mes)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Despesa Total: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_despesa_total_acum}
+data <- select(df, mes, emp_acum, liq_acum, prev_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Despesa Total: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_despesa_total_arrec}
+data <- select(df, mes, emp_acum, liq_acum, arrec_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Arrecadação")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Arrecadação"))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Despesa Total: executado x arrecadação") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+*Comparado com a arrecadação total*
+
+### Despesa Corrente
+
+```{r read_despesa_corr}
+df <- readxl::read_excel(ds_file, sheet = "DespesaCorrente", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_despesa_corr_mensal}
+data <- select(df, mes, emp_mes, liq_mes, prev_mes)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Corrente: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_corr_acum}
+data <- select(df, mes, emp_acum, liq_acum, prev_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Corrente: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_corr_diff}
+data <- select(df, mes, vl_emp_prev, vl_liq_prev, perc_emp_prev,	perc_liq_prev)
+data$perc_emp_prev <- percent(data$perc_emp_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+data$perc_liq_prev <- percent(data$perc_liq_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+colnames(data) <- c("Mês", "Empenhado (-) Previsto", "Liquidado (-) Previsto", "Empenhado / Previsto", "Liquidado / Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Despesa Corrente: previsto x despesa", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_corr_arrec}
+data <- select(df, mes, arrec_acum,	perc_emp_arrec,	perc_liq_arrec)
+data$perc_emp_arrec <- percent(data$perc_emp_arrec, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+data$perc_liq_arrec <- percent(data$perc_liq_arrec, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+colnames(data) <- c("Mês", "Arrecadado", "Empenhado / Arrecadado", "Liquidado / Arrecadado")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Corrente: arrecadação x despesa", col.names = colnames(data))
+tbl
+```
+
+*Comparado com a receita corrente*
+
+```{r plot_despesa_corr_mensal}
+data <- select(df, mes, emp_mes, liq_mes, prev_mes)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Despesa Corrente: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_despesa_corr_acum}
+data <- select(df, mes, emp_acum, liq_acum, prev_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Despesa Corrente: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_despesa_corr_arrec}
+data <- select(df, mes, emp_acum, liq_acum, arrec_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Arrecadação")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Arrecadação"))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Despesa Corrente: executado x arrecadação") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+*Comparado com a receita corrente*
+
+### Despesa com Pessoal e Encargos Sociais
+
+```{r read_despesa_pessoal}
+df <- readxl::read_excel(ds_file, sheet = "DespesaPessoal", skip = 2)
+df$mes <- as.factor(df$mes)
+# df
+```
+
+```{r table_despesa_pessoal_mensal}
+data <- select(df, mes, emp_mes, liq_mes, prev_mes)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa com Pessoal e Encargos Sociais: valores mensais", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_pessoal_acum}
+data <- select(df, mes, emp_acum, liq_acum, prev_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa com Pessoal e Encargos Sociais: valores acumulados", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_pessoal_diff}
+data <- select(df, mes, vl_emp_prev, vl_liq_prev, perc_emp_prev,	perc_liq_prev)
+data$perc_emp_prev <- percent(data$perc_emp_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+data$perc_liq_prev <- percent(data$perc_liq_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+colnames(data) <- c("Mês", "Empenhado (-) Previsto", "Liquidado (-) Previsto", "Empenhado / Previsto", "Liquidado / Previsto")
+tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Despesa com Pessoal e Encargos Sociais: previsto x despesa", col.names = colnames(data))
+tbl
+```
+
+```{r table_despesa_pessoal_arrec}
+data <- select(df, mes, arrec_acum,	perc_emp_arrec,	perc_liq_arrec)
+data$perc_emp_arrec <- percent(data$perc_emp_arrec, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+data$perc_liq_arrec <- percent(data$perc_liq_arrec, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+colnames(data) <- c("Mês", "Arrecadado", "Empenhado / Arrecadado", "Liquidado / Arrecadado")
+tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa com Pessoal e Encargos Sociais: arrecadação x despesa", col.names = colnames(data))
+tbl
+```
+
+*Comparado com a receita corrente*
+
+```{r plot_despesa_pessoal_mensal}
+data <- select(df, mes, emp_mes, liq_mes, prev_mes)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
+data$tipo <- as.factor(data$tipo)
+# data
+g <- ggplot(data, aes(x = Mês, group = tipo, fill = tipo)) +
+  ggtitle("Despesa com Pessoal e Encargos Sociais: valores mensais") +
+  geom_bar(aes(y = valor), stat = "identity", position = "dodge", na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_fill_manual(values = c(app.color.secondary, app.color.primary, app.color.ternary))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_despesa_pessoal_acum}
+data <- select(df, mes, emp_acum, liq_acum, prev_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Despesa com Pessoal e Encargos Sociais: valores acumulados") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("dashed", "solid", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+```{r plot_despesa_pessoal_arrec}
+data <- select(df, mes, emp_acum, liq_acum, arrec_acum)
+colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Arrecadação")
+data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Arrecadação"))
+data$tipo <- as.factor(data$tipo)
+g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
+  ggtitle("Despesa com Pessoal e Encargos Sociais: executado x arrecadação") +
+  geom_line(aes(y = valor), na.rm = TRUE) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ".", decimal.mark = ",")) +
+  scale_x_discrete(limits = unique(data$Mês)) +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+g <- app.plot.theming(g)
+g
+```
+
+*Comparado com a receita corrente*
+
+
+# Considerações Finais
+
+O serviço de contabilidade limita-se à sua função primária, que é a de fornecer informações confiáveis, relevantes e tempestivas com vistas a apoiar o processo de tomada de decisão e à prestação de contas, atendendo ao princípio da transparência.
+
+Cabe à gestão da entidade, primariamente, a avaliação da gestão bem como identificais oportunidades e ameaças e, por esse motivo, é que este relatório se abstém de formar qualquer juízo a respeito da eficiência, eficácia e efetividade da gestão, tarefa que derradeiramente cabe aos órgãos de controle e, ao Legislativo e à sociedade como um todo.
+
+
+
+
+Independência, RS, `r format(Sys.Date(), format = "%d de %B de %Y")`
+
+
+***
