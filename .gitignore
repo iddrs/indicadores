@@ -44,3 +44,4 @@ output/
 *.gz
 *.pdf
 *.aux
+*.toc
