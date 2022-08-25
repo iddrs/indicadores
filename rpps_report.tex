@@ -1,0 +1,97 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[tmargin=2cm, bmargin=1.5cm, lmargin=2cm, rmargin=1.5cm]{geometry}
+\usepackage{parskip}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\title{Indicadores Fiscais e Gerenciais do FPSM}
+\author{Everton da Rosa - Contador - CRC RS-076595/o-3}
+\input{"cache/data.tex"}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este relatório tem o objetivo de apresentar os principais indicadores legais e gerenciais relativos ao \textbf{Fundo de Previdência dos Servidores Municipais (RPPS)} do Município de \textbf{Independência/RS}.
+\end{abstract}
+
+\tableofcontents
+
+\section{Indicadores Gerenciais}
+
+Nesta seção estão apresentados alguns indicadores de cunho gerencial com a finalidade de auxiliar a gestão do RPPS nas decisões que envolvam aspectos contábeis, orçamentários e financeiros.
+
+\subsection{Receita Orçamentária}
+
+A receita engloba a receita orçamentária e intra-orçamentária arrecadada pelo RPPS, em termos líquidos de suas deduções.
+
+Os valores são apresentados em termos mensais e acumulados até o mês de referência, comparados aos valores efetivamente realizados no ano anterior e com os valores previstos na lei orçamentária anual.
+
+\input{"tex_templates/rpps/receita_total.tex"}
+\input{"tex_templates/rpps/receita_contrib_serv.tex"}
+\input{"tex_templates/rpps/receita_contrib_patronal_normal.tex"}
+\input{"tex_templates/rpps/receita_contrib_patronal_suplem.tex"}
+
+\subsection{Disponibilidades do RPPS}
+
+Esta seção apresenta dados sobre as disponibilidades e investimentos do RPPS.
+
+\input{"tex_templates/rpps/disponibilidades.tex"}
+
+\subsection{Investimentos}
+
+A gestão dos investimentos é feita por comitê especialmente constituído para esta finalidade, bem como por servidor imbuído da função de gestor de investimentos, cabendo ao serviço de contabilidade o registro dos fatos que impactam esses ativos.
+
+Com isso em mente, este relatório se abstém de formar opinião sobre esse tema, visto que a competência para tal é dos citados comitê e gestor de investimentos.
+
+\input{"tex_templates/rpps/disponibilidades_resultado.tex"}
+
+\subsection{Despesas Orçamentárias}
+
+As despesas orçamentárias do RPPS são apresentadas nesta seção com base nos valores empenhados mensal e acumulado, comparados aos valores correspondentes do ano anterior.
+
+\input{"tex_templates/rpps/despesa_total.tex"}
+\input{"tex_templates/rpps/despesa_inativos_rpps.tex"}
+\input{"tex_templates/rpps/despesa_inativos_tesouro.tex"}
+\input{"tex_templates/rpps/despesa_adm.tex"}
+\input{"tex_templates/rpps/despesa_aposent.tex"}
+\input{"tex_templates/rpps/despesa_pensoes.tex"}
+
+\subsection{Dívida do Executivo em Regime de Parcelamento}
+
+O Poder Executivo mantém um parcelamento de contribuições e outros valores não repassados e de empréstimos feitos junto ao RPPS. Esse parcelamento foi autorizado em 360 parcelas sendo que para o ano de 2022 foram pagas as parcelas 203 a 214.
+
+Como forma de acompanhamento dos valores recebidos e do saldo devedor, foi elaborada projeção atualizada pela estimativa do IPCA englobando todo o período do parcelamento.
+
+Também são apresentados os valores efetivamente realizados.
+
+\input{"tex_templates/rpps/parcelamento.tex"}
+
+\subsection{Compensação Previdenciária}
+
+A compensação previdenciária entre o RPPS e o RGPS e outros RPPS tem a finalidade de transferir os recursos de contribuições dos segurados e patronal para os RPPS nos quais o segurado efetivamente se inativou ou gerou pensionistas.
+
+Assim, demonstra-se a seguir o balanço entre os recursos recebidos de outros RPPS e do RGPS e aqueles transferidos a eles pelo FPSM.
+
+\input{"tex_templates/rpps/comp_prev.tex"}
+
+\vspace{16pt}
+
+\begin{center}
+	Independência, RS, \today
+\end{center}
+
+\vspace{36pt}
+
+\begin{center}
+	EVERTON DA ROSA\\
+	Contador\\
+	CRC RS-076595/O-3
+\end{center}
+\end{document}

@@ -18,6 +18,7 @@ data_base <- as.Date(df$data_base[1])
 periodo <- format(data_base, format = "%B de %Y")
 ano_base <- format(data_base, format = "%Y")
 writeLines(paste("\\date{", periodo, "}", sep = ""), "cache/data.tex")
+writeLines(paste("indicadores rpps ", format(data_base, format = "%Y-%m"), ".pdf", sep = ""), "cache/arquivo.txt")
 
 # Receita Total
 df <- readxl::read_excel(ds_file, sheet = "ReceitaTotal")
@@ -31,7 +32,7 @@ tbl = app.table.default(
   caption = "Receita Total (Mensal)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_total_1.tex")
+app.table.save(tbl, "rpps_receita_total_1")
 
 tbl = app.table.default(
   select(df, mes, arrec_ant_acum,	prev_acum,	arrec_acum),
@@ -39,7 +40,7 @@ tbl = app.table.default(
   caption = "Receita Total (Acumulado)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_total_2.tex")
+app.table.save(tbl, "rpps_receita_total_2")
 
 data <- select(df, mes, arrec_ant,	arrec_mes)
 ant <- select(data, mes, arrec_ant)
@@ -61,7 +62,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_total_1.png", plot = g)
+app.plot.save("rpps_receita_total_1", plot = g)
 
 prev <- select(df, mes, prev_mes)
 prev$valor <- prev$prev_mes
@@ -81,7 +82,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.primary, app.color.secondary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_total_2.png", plot = g)
+app.plot.save("rpps_receita_total_2", plot = g)
 
 data <- select(df, mes, arrec_ant_acum,	arrec_acum)
 ant <- select(data, mes, arrec_ant_acum)
@@ -103,7 +104,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_total_3.png", plot = g)
+app.plot.save("rpps_receita_total_3", plot = g)
 
 prev <- select(df, mes, prev_acum)
 prev$valor <- prev$prev_acum
@@ -123,7 +124,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, linetype = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("solid", "dashed"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_total_4.png", plot = g)
+app.plot.save("rpps_receita_total_4", plot = g)
 
 # Contribuição dos Servidores Ativos, Inativos e Pensionistas
 df <- readxl::read_excel(ds_file, sheet = "ContribServ")
@@ -137,7 +138,7 @@ tbl = app.table.default(
   caption = "Contribuição dos Servidores (Mensal)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_contrib_serv_1.tex")
+app.table.save(tbl, "rpps_receita_contrib_serv_1")
 
 tbl = app.table.default(
   select(df, mes, arrec_ant_acum,	prev_acum,	arrec_acum),
@@ -145,7 +146,7 @@ tbl = app.table.default(
   caption = "Contribuição dos Servidores (Acumulado)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_contrib_serv_2.tex")
+app.table.save(tbl, "rpps_receita_contrib_serv_2")
 
 data <- select(df, mes, arrec_ant,	arrec_mes)
 ant <- select(data, mes, arrec_ant)
@@ -167,7 +168,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_serv_1.png", plot = g)
+app.plot.save("rpps_receita_contrib_serv_1", plot = g)
 
 prev <- select(df, mes, prev_mes)
 prev$valor <- prev$prev_mes
@@ -187,7 +188,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.primary, app.color.secondary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_serv_2.png", plot = g)
+app.plot.save("rpps_receita_contrib_serv_2", plot = g)
 
 data <- select(df, mes, arrec_ant_acum,	arrec_acum)
 ant <- select(data, mes, arrec_ant_acum)
@@ -209,7 +210,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_serv_3.png", plot = g)
+app.plot.save("rpps_receita_contrib_serv_3", plot = g)
 
 prev <- select(df, mes, prev_acum)
 prev$valor <- prev$prev_acum
@@ -229,7 +230,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, linetype = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("solid", "dashed"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_serv_4.png", plot = g)
+app.plot.save("rpps_receita_contrib_serv_4", plot = g)
 
 # Contribuição Patronal – alíquota normal
 df <- readxl::read_excel(ds_file, sheet = "PatronalNormal")
@@ -243,7 +244,7 @@ tbl = app.table.default(
   caption = "Contribuição Patronal Normal (Mensal)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_contrib_patronal_normal_1.tex")
+app.table.save(tbl, "rpps_receita_contrib_patronal_normal_1")
 
 tbl = app.table.default(
   select(df, mes, arrec_ant_acum,	prev_acum,	arrec_acum),
@@ -251,7 +252,7 @@ tbl = app.table.default(
   caption = "Contribuição Patronal Normal (Acumulado)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_contrib_patronal_normal_2.tex")
+app.table.save(tbl, "rpps_receita_contrib_patronal_normal_2")
 
 data <- select(df, mes, arrec_ant,	arrec_mes)
 ant <- select(data, mes, arrec_ant)
@@ -273,7 +274,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_normal_1.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_normal_1", plot = g)
 
 prev <- select(df, mes, prev_mes)
 prev$valor <- prev$prev_mes
@@ -293,7 +294,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.primary, app.color.secondary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_normal_2.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_normal_2", plot = g)
 
 data <- select(df, mes, arrec_ant_acum,	arrec_acum)
 ant <- select(data, mes, arrec_ant_acum)
@@ -315,7 +316,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_normal_3.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_normal_3", plot = g)
 
 prev <- select(df, mes, prev_acum)
 prev$valor <- prev$prev_acum
@@ -335,7 +336,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, linetype = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("solid", "dashed"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_normal_4.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_normal_4", plot = g)
 
 # Contribuição Patronal – alíquota suplementar
 df <- readxl::read_excel(ds_file, sheet = "PatronalSuplementar")
@@ -349,7 +350,7 @@ tbl = app.table.default(
   caption = "Contribuição Patronal Suplementar (Mensal)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_contrib_patronal_suplem_1.tex")
+app.table.save(tbl, "rpps_receita_contrib_patronal_suplem_1")
 
 tbl = app.table.default(
   select(df, mes, arrec_ant_acum,	prev_acum,	arrec_acum),
@@ -357,7 +358,7 @@ tbl = app.table.default(
   caption = "Contribuição Patronal Suplementar (Acumulado)",
   col.names = c("Mês", "Ano Anterior", "Previsto", "Arrecadado")
 )
-writeLines(tbl, "cache/rpps_receita_contrib_patronal_suplem_2.tex")
+app.table.save(tbl, "rpps_receita_contrib_patronal_suplem_2")
 
 data <- select(df, mes, arrec_ant,	arrec_mes)
 ant <- select(data, mes, arrec_ant)
@@ -379,7 +380,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_suplem_1.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_suplem_1", plot = g)
 
 prev <- select(df, mes, prev_mes)
 prev$valor <- prev$prev_mes
@@ -399,7 +400,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.primary, app.color.secondary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_suplem_2.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_suplem_2", plot = g)
 
 data <- select(df, mes, arrec_ant_acum,	arrec_acum)
 ant <- select(data, mes, arrec_ant_acum)
@@ -421,7 +422,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_suplem_3.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_suplem_3", plot = g)
 
 prev <- select(df, mes, prev_acum)
 prev$valor <- prev$prev_acum
@@ -441,7 +442,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, linetype = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("solid", "dashed"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_receita_contrib_patronal_suplem_4.png", plot = g)
+app.plot.save("rpps_receita_contrib_patronal_suplem_4", plot = g)
 
 # Disponibilidades de Caixa do RPPS
 df <- readxl::read_excel(ds_file, sheet = "Caixa", skip = 1)
@@ -455,7 +456,7 @@ tbl = app.table.default(
   caption = "Saldo de Caixa e Equivalentes de Caixa e Investimentos",
   col.names = c("Mês", "Saldo Projetado", "Saldo Efetivo")
 )
-writeLines(tbl, "cache/rpps_disponibilidades_1.tex")
+app.table.save(tbl, "rpps_disponibilidades_1")
 
 t1 <- select(df, mes, projetado)
 t1$valor <- t1$projetado
@@ -475,7 +476,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, linetype = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_linetype_manual(values = c("solid", "dashed"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_disponibilidades_1.png", plot = g)
+app.plot.save("rpps_disponibilidades_1", plot = g)
 
 # Valorização/Desvalorização dos Investimentos do RPPS
 df <- readxl::read_excel(ds_file, sheet = "GanhosPerdasRend", range = cellranger::cell_cols("A:G"))
@@ -489,7 +490,7 @@ tbl = app.table.default(
   caption = "Variação das aplicações financeiras: valores mensais",
   col.names = c("Mês", paste("Desempenho", as.integer(ano_base) - 1), paste("Previsto", ano_base), paste("Desempenho", ano_base))
 )
-writeLines(tbl, "cache/rpps_disponibilidades_resultado_1.tex")
+app.table.save(tbl, "rpps_disponibilidades_resultado_1")
 
 tbl = app.table.default(
   select(df, mes, arrec_ant_acum,	prev_acum, arrec_acum),
@@ -497,7 +498,7 @@ tbl = app.table.default(
   caption = "Variação das aplicações financeiras: valores acumulados",
   col.names = c("Mês", paste("Desempenho", as.integer(ano_base) - 1), paste("Previsto", ano_base), paste("Desempenho", ano_base))
 )
-writeLines(tbl, "cache/rpps_disponibilidades_resultado_2.tex")
+app.table.save(tbl, "rpps_disponibilidades_resultado_2")
 
 data <- select(df, mes, arrec_ant,	arrec_mes)
 ant <- select(data, mes, arrec_ant)
@@ -519,7 +520,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_disponibilidades_resultado_1.png", plot = g)
+app.plot.save("rpps_disponibilidades_resultado_1", plot = g)
 
 prev <- select(df, mes, prev_mes)
 prev$valor <- prev$prev_mes
@@ -539,7 +540,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_disponibilidades_resultado_2.png", plot = g)
+app.plot.save("rpps_disponibilidades_resultado_2", plot = g)
 
 data <- select(df, mes, arrec_ant_acum,	arrec_acum)
 ant <- select(data, mes, arrec_ant_acum)
@@ -561,7 +562,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_disponibilidades_resultado_3.png", plot = g)
+app.plot.save("rpps_disponibilidades_resultado_3", plot = g)
 
 prev <- select(df, mes, prev_acum)
 prev$valor <- prev$prev_acum
@@ -581,7 +582,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, linetype = tipo)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("solid", "dashed"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_disponibilidades_resultado_4.png", plot = g)
+app.plot.save("rpps_disponibilidades_resultado_4", plot = g)
 
 # Despesa Total
 df <- readxl::read_excel(ds_file, sheet = "DespesaTotal", range = cellranger::cell_cols("A:E"))
@@ -595,7 +596,7 @@ tbl = app.table.default(
   caption = "Despesa Total: empenhado mensal",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_total_1.tex")
+app.table.save(tbl, "rpps_despesa_total_1")
 
 tbl = app.table.default(
   select(df, mes, emp_ant_acum, emp_atual_acum),
@@ -603,7 +604,7 @@ tbl = app.table.default(
   caption = "Despesa Total: empenhado acumulado",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_total_2.tex")
+app.table.save(tbl, "rpps_despesa_total_2")
 
 data <- select(df, mes, emp_ant,	emp_atual)
 ant <- select(data, mes, emp_ant)
@@ -625,7 +626,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_total_1.png", plot = g)
+app.plot.save("rpps_despesa_total_1", plot = g)
 
 data <- select(df, mes, emp_ant_acum,	emp_atual_acum)
 ant <- select(data, mes, emp_ant_acum)
@@ -647,7 +648,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_total_2.png", plot = g)
+app.plot.save("rpps_despesa_total_2", plot = g)
 
 # Despesa com Inativos e Pensionistas do RPPS
 df <- readxl::read_excel(ds_file, sheet = "InativPensRPPS", range = cellranger::cell_cols("A:E"))
@@ -661,7 +662,7 @@ tbl = app.table.default(
   caption = "Despesa com Inativos e Pensionistas do RPPS: empenhado mensal",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_inativos_rpps_.tex")
+app.table.save(tbl, "rpps_despesa_inativos_rpps_1")
 
 tbl = app.table.default(
   select(df, mes, emp_ant_acum, emp_atual_acum),
@@ -669,7 +670,7 @@ tbl = app.table.default(
   caption = "Despesa com Inativos e Pensionistas do RPPS: empenhado acumulado",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_inativos_rpps_2.tex")
+app.table.save(tbl, "rpps_despesa_inativos_rpps_2")
 
 data <- select(df, mes, emp_ant,	emp_atual)
 ant <- select(data, mes, emp_ant)
@@ -691,7 +692,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_inativos_rpps_1.png", plot = g)
+app.plot.save("rpps_despesa_inativos_rpps_1", plot = g)
 
 data <- select(df, mes, emp_ant_acum,	emp_atual_acum)
 ant <- select(data, mes, emp_ant_acum)
@@ -713,7 +714,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_inativos_rpps_2.png", plot = g)
+app.plot.save("rpps_despesa_inativos_rpps_2", plot = g)
 
 # Despesa com Inativos e Pensionistas do Tesouro
 df <- readxl::read_excel(ds_file, sheet = "InativPensTesouro", range = cellranger::cell_cols("A:E"))
@@ -727,7 +728,7 @@ tbl = app.table.default(
   caption = "Despesa com Inativos e Pensionistas do Tesouro: empenhado mensal",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_inativos_tesouro_1.tex")
+app.table.save(tbl, "rpps_despesa_inativos_tesouro_1")
 
 tbl = app.table.default(
   select(df, mes, emp_ant_acum, emp_atual_acum),
@@ -735,7 +736,7 @@ tbl = app.table.default(
   caption = "Despesa com Inativos e Pensionistas do Tesouro: empenhado acumulado",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_inativos_tesouro_2.tex")
+app.table.save(tbl, "rpps_despesa_inativos_tesouro_2")
 
 data <- select(df, mes, emp_ant,	emp_atual)
 ant <- select(data, mes, emp_ant)
@@ -757,7 +758,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_inativos_tesouro_1.png", plot = g)
+app.plot.save("rpps_despesa_inativos_tesouro_1", plot = g)
 
 data <- select(df, mes, emp_ant_acum,	emp_atual_acum)
 ant <- select(data, mes, emp_ant_acum)
@@ -779,7 +780,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_inativos_tesouro_2.png", plot = g)
+app.plot.save("rpps_despesa_inativos_tesouro_2", plot = g)
 
 # Despesas Administrativas do RPPS
 df <- readxl::read_excel(ds_file, sheet = "Manut", range = cellranger::cell_cols("A:E"))
@@ -793,7 +794,7 @@ tbl = app.table.default(
   caption = "Despesas Administrativas do RPPS: empenhado mensal",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_adm_1.tex")
+app.table.save(tbl, "rpps_despesa_adm_1")
 
 tbl = app.table.default(
   select(df, mes, emp_ant_acum, emp_atual_acum),
@@ -801,7 +802,7 @@ tbl = app.table.default(
   caption = "Despesas Administrativas do RPPS: empenhado acumulado",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_adm_2.tex")
+app.table.save(tbl, "rpps_despesa_adm_2")
 
 data <- select(df, mes, emp_ant,	emp_atual)
 ant <- select(data, mes, emp_ant)
@@ -823,7 +824,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_adm_1.png", plot = g)
+app.plot.save("rpps_despesa_adm_1", plot = g)
 
 data <- select(df, mes, emp_ant_acum,	emp_atual_acum)
 ant <- select(data, mes, emp_ant_acum)
@@ -845,7 +846,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_adm_2.png", plot = g)
+app.plot.save("rpps_despesa_adm_2", plot = g)
 
 # Despesas com Aposentadorias
 df <- readxl::read_excel(ds_file, sheet = "Aposentadorias", range = cellranger::cell_cols("A:E"))
@@ -859,7 +860,7 @@ tbl = app.table.default(
   caption = "Despesas com Aposentadorias: empenhado mensal",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_aposent_1.tex")
+app.table.save(tbl, "rpps_despesa_aposent_1")
 
 tbl = app.table.default(
   select(df, mes, emp_ant_acum, emp_atual_acum),
@@ -867,7 +868,7 @@ tbl = app.table.default(
   caption = "Despesas com Aposentadorias: empenhado acumulado",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_aposent_2.tex")
+app.table.save(tbl, "rpps_despesa_aposent_2")
 
 data <- select(df, mes, emp_ant,	emp_atual)
 ant <- select(data, mes, emp_ant)
@@ -889,7 +890,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_aposent_1.png", plot = g)
+app.plot.save("rpps_despesa_aposent_1", plot = g)
 
 data <- select(df, mes, emp_ant_acum,	emp_atual_acum)
 ant <- select(data, mes, emp_ant_acum)
@@ -911,7 +912,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_aposent_2.png", plot = g)
+app.plot.save("rpps_despesa_aposent_2", plot = g)
 
 # Despesas com Pensões
 df <- readxl::read_excel(ds_file, sheet = "Pensoes", range = cellranger::cell_cols("A:E"))
@@ -925,7 +926,7 @@ tbl = app.table.default(
   caption = "Despesas com Pensões: empenhado mensal",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_pensoes_1.tex")
+app.table.save(tbl, "rpps_despesa_pensoes_1")
 
 tbl = app.table.default(
   select(df, mes, emp_ant_acum, emp_atual_acum),
@@ -933,7 +934,7 @@ tbl = app.table.default(
   caption = "Despesas com Pensões: empenhado acumulado",
   col.names = c("Mês", as.integer(ano_base) - 1, ano_base)
 )
-writeLines(tbl, "cache/rpps_despesa_pensoes_2.tex")
+app.table.save(tbl, "rpps_despesa_pensoes_2")
 
 data <- select(df, mes, emp_ant,	emp_atual)
 ant <- select(data, mes, emp_ant)
@@ -955,7 +956,7 @@ g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_pensoes_1.png", plot = g)
+app.plot.save("rpps_despesa_pensoes_1", plot = g)
 
 data <- select(df, mes, emp_ant_acum,	emp_atual_acum)
 ant <- select(data, mes, emp_ant_acum)
@@ -977,7 +978,7 @@ g <- ggplot(data, aes(x = mes, group = ano, linetype = ano)) +
   scale_x_discrete(limits = unique(df$mes)) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_despesa_pensoes_2.png", plot = g)
+app.plot.save("rpps_despesa_pensoes_2", plot = g)
 
 # Dívida do Executivo em Regime de Parcelamento
 df <- readxl::read_excel(ds_file, sheet = "Divida")
@@ -989,7 +990,7 @@ tbl = app.table.default(
   caption = "Dívida do Executivo em Regime de Parcelamento",
   col.names = c("Ano", "Saldo Inicial", "Saldo Projetado", "Valor Pago", "Pagamento Projetado")
 )
-writeLines(tbl, "cache/rpps_parcelamento_1.tex")
+app.table.save(tbl, "rpps_parcelamento_1")
 
 data <- select(df, ano, saldo_inicial, saldo_projetado)
 inicial <- select(data, ano, saldo_inicial)
@@ -1011,7 +1012,7 @@ g <- ggplot(data, aes(x = ano, group = tipo, linetype = tipo)) +
   scale_linetype_manual(values = c("solid", "dashed")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_parcelamento_1.png", plot = g)
+app.plot.save("rpps_parcelamento_1", plot = g)
 
 data <- select(df, ano, valor_pago, pagamento_projetado)
 inicial <- select(data, ano, valor_pago)
@@ -1033,7 +1034,7 @@ g <- ggplot(data, aes(x = ano, group = tipo, fill = tipo)) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_parcelamento_2.png", plot = g)
+app.plot.save("rpps_parcelamento_2", plot = g)
 
 # Compensação Previdenciária
 df <- readxl::read_excel(ds_file, sheet = "COMPREV", range = cellranger::cell_cols("A:F"))
@@ -1047,7 +1048,7 @@ tbl = app.table.default(
   caption = "Compensação Previdenciária: receitas x despesas (valores mensais)",
   col.names = c("Mês", "Receita", "Despesa")
 )
-writeLines(tbl, "cache/rpps_comp_prev_1.tex")
+app.table.save(tbl, "rpps_comp_prev_1")
 
 tbl = app.table.default(
   select(df, mes, receita_acum, despesa_acum),
@@ -1055,7 +1056,7 @@ tbl = app.table.default(
   caption = "Compensação Previdenciária: receitas x despesas (valores acumulados)",
   col.names = c("Mês", "Receita", "Despesa")
 )
-writeLines(tbl, "cache/rpps_comp_prev_2.tex")
+app.table.save(tbl, "rpps_comp_prev_2")
 
 receita <- select(df, mes, receita)
 receita$valor <- receita$receita
@@ -1075,7 +1076,7 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.primary, app.color.secondary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_comp_prev_1.png", plot = g)
+app.plot.save("rpps_comp_prev_1", plot = g)
 
 receita <- select(df, mes, receita_acum)
 receita$valor <- receita$receita_acum
@@ -1095,4 +1096,4 @@ g <- ggplot(data, aes(x = mes, group = tipo, fill = tipo)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = c(app.color.primary, app.color.secondary))
 g <- app.plot.theming(g)
-ggsave("cache/rpps_comp_prev_2.png", plot = g)
+app.plot.save("rpps_comp_prev_2", plot = g)
