@@ -18,6 +18,7 @@ data_base <- as.Date(df$data_base[1])
 periodo <- format(data_base, format = "%B de %Y")
 ano_base <- format(data_base, format = "%Y")
 writeLines(paste("\\date{", periodo, "}", sep = ""), "cache/data.tex")
+writeLines(paste("indicadores cm ", format(data_base, format = "%Y-%m"), ".pdf", sep = ""), "cache/arquivo.txt")
 
 # Limite Constitucional de Gastos Totais
 df <- readxl::read_excel(ds_file, sheet = "GastoTotal")
@@ -30,7 +31,7 @@ df$indice_estimado <- percent(df$indice_estimado)
 df$ano <- NULL
 
 tbl = app.table.default(df, align=c("l", "r", "r", "r", "r"), caption = "Gasto Total Estimado", col.names = c("Mês", "Limite R$", "Gasto Total Estimado R$", "Resultado Estimado R$", "Índice Estimado %"))
-writeLines(tbl, "cache/cm_gasto_total.tex")
+app.table.save(tbl, "cm_gasto_total")
 
 df$mes <- as.factor(df$mes)
 g <- ggplot(df, aes(x = mes, group = 1)) +
@@ -43,7 +44,7 @@ g <- ggplot(df, aes(x = mes, group = 1)) +
   scale_fill_manual(values = app.color.primary) + 
   scale_color_manual(values = app.color.secondary)
 g <- app.plot.theming(g)
-ggsave("cache/cm_gasto_total.png", plot = g)
+app.plot.save("cm_gasto_total", plot = g)
 
 # Limite Constitucional de Gasto com Folha de Pagamentos
 df <- readxl::read_excel(ds_file, sheet = "GastoFolha")
@@ -56,7 +57,7 @@ df$indice_estimado <- percent(df$indice_estimado)
 df$ano <- NULL
 
 tbl = app.table.default(df, align=c("l", "r", "r", "r", "r"), caption = "Gasto com Folha de Pagamento", col.names = c("Mês", "Limite R$", "Gasto com Folha Estimado R$", "Resultado Estimado R$", "Índice Estimado %"))
-writeLines(tbl, "cache/cm_gasto_folha.tex")
+app.table.save(tbl, "cm_gasto_folha")
 
 df$mes <- as.factor(df$mes)
 g <- ggplot(df, aes(x = mes, group = 1)) +
@@ -69,7 +70,7 @@ g <- ggplot(df, aes(x = mes, group = 1)) +
   scale_fill_manual(values = app.color.primary) + 
   scale_color_manual(values = app.color.secondary)
 g <- app.plot.theming(g)
-ggsave("cache/cm_gasto_folha.png", plot = g)
+app.plot.save("cm_gasto_folha", plot = g)
 
 # Limite de Despesa Total com Pessoal da LRF
 df <- readxl::read_excel(ds_file, sheet = "PessoalLRF")
@@ -86,7 +87,7 @@ df$limite_alerta <- percent(df$limite_alerta, big.mark = ".", decimal.mark = ","
 df$limite_prudencial <- percent(df$limite_prudencial, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 
 tbl = app.table.default(df, align=c("l", "r", "r", "r", "r"), caption = "Despesa Total com Pessoal (LRF)", col.names = c("Mês", "Índice", "Limite Legal", "Limite de Alerta", "Limite Prudencial"))
-writeLines(tbl, "cache/cm_dtp.tex")
+app.table.save(tbl, "cm_dtp")
 
 dfg$mes <- as.factor(dfg$mes)
 g <- ggplot(dfg, aes(x = mes, group = 1)) +
@@ -101,7 +102,7 @@ g <- ggplot(dfg, aes(x = mes, group = 1)) +
   scale_fill_manual(values = app.color.primary) +
   scale_linetype_manual(values = c("dashed", "solid", "dotted"))
 g <- app.plot.theming(g)
-ggsave("cache/cm_dtp.png", plot = g)
+app.plot.save("cm_dtp", plot = g)
 
 # Limite de Suplementação Autorizado na Lei Orçamentária Anual
 df <- readxl::read_excel(ds_file, sheet = "LimiteSuplementacao")
@@ -117,7 +118,7 @@ df$limite <- percent(df$limite, big.mark = ".", decimal.mark = ",")
 df$media <- percent(df$media, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 
 tbl = app.table.default(df, align=c("l", "r", "r", "r"), caption = "Limite de Suplementação (LOA)", col.names = c("Mês", "Índice", "Limite", "Esperado"))
-writeLines(tbl, "cache/cm_suplem.tex")
+app.table.save(tbl, "cm_suplem")
 
 dfg$mes <- as.factor(dfg$mes)
 g <- ggplot(dfg, aes(x = mes, group = 1)) +
@@ -131,7 +132,7 @@ g <- ggplot(dfg, aes(x = mes, group = 1)) +
   scale_fill_manual(values = app.color.primary) +
   scale_linetype_manual(values = c("dashed", "solid"))
 g <- app.plot.theming(g)
-ggsave("cache/cm_suplem.png", plot = g)
+app.plot.save("cm_suplem", plot = g)
 
 # Resultado Orçamentário
 df <- readxl::read_excel(ds_file, sheet = "ResultadoOrcamentario")
@@ -143,7 +144,7 @@ pvt <- pivot_wider(df, names_from = ano, values_from = valor)
 
 cnames = append(list("Mês"), levels(unique(df$ano)))
 tbl = app.table.default(pvt, align=c("l", "r", "r"), caption = "Resultado Orçamentário", col.names = cnames)
-writeLines(tbl, "cache/cm_resultado.tex")
+app.table.save(tbl, "cm_resultado")
 
 g <- ggplot(df) +
   ggtitle("Resultado Orçamentário") +
@@ -152,7 +153,7 @@ g <- ggplot(df) +
   scale_fill_manual(values = c(app.color.secondary, app.color.primary)) +
   scale_x_discrete(limits = unique(df$mes))
 g <- app.plot.theming(g)
-ggsave("cache/cm_resultado.png", plot = g)
+app.plot.save("cm_resultado", plot = g)
 
 # Saldo Financeiro Bruto e Líquido
 df <- readxl::read_excel(ds_file, sheet = "SaldoFinanceiro")
@@ -164,7 +165,7 @@ df <- df[df$ano==ano_base,]
 df$ano <- NULL
 
 tbl = app.table.default(df, align=c("l", "r", "r"), caption = "Disponibilidades Financeiras", col.names = c("Mês", "Saldo Bruto", "Saldo Disponível"))
-writeLines(tbl, "cache/cm_financeiro.tex")
+app.table.save(tbl, "cm_financeiro")
 
 g <- ggplot(df, aes(x = mes, group = 1)) +
   ggtitle("Disponibilidades Financeiras") +
@@ -175,4 +176,4 @@ g <- ggplot(df, aes(x = mes, group = 1)) +
   scale_fill_manual(values = app.color.primary) + 
   scale_color_manual(values = app.color.primary)
 g <- app.plot.theming(g)
-ggsave("cache/cm_financeiro.png", plot = g)
+app.plot.save("cm_financeiro", plot = g)

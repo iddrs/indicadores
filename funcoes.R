@@ -21,8 +21,7 @@ app.plot.theming <- function(g) {
         panel.background = element_rect(fill = "transparent"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        plot.background = element_rect(fill = "transparent"),
-        aspect.ratio = 9/16
+        plot.background = element_rect(fill = "transparent")
       ) +
       xlab(NULL) +
       ylab(NULL)
@@ -31,3 +30,11 @@ app.plot.theming <- function(g) {
 
 app.color.primary <- "black"
 app.color.secondary <- "grey"
+
+app.table.save <- function(tbl, name) {
+  writeLines(tbl, paste("cache/", name, ".tex", sep = ""))
+}
+
+app.plot.save <- function(name, plot) {
+  ggsave(paste("cache/", name, ".png", sep = ""), plot = plot, height = 10, scale = 0.75, units = "cm", dpi = "print")
+}
