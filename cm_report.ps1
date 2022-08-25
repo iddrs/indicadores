@@ -14,6 +14,8 @@ $Output = Join-Path -Path 'output' -ChildPath $OutputFile
 
 # Gerando a saída em PDF
 pdflatex -file-line-error -halt-on-error -output-directory cache/ -output-format pdf cm_report.tex
+# Executa duas vezes para formar o sumário
+pdflatex -file-line-error -halt-on-error -output-directory cache/ -output-format pdf cm_report.tex
 
 # Renomeando a saída para output
 Move-Item -Path cache\cm_report.pdf -Destination $Output -Force
