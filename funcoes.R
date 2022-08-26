@@ -28,8 +28,9 @@ app.plot.theming <- function(g) {
   )
 }
 
-app.color.primary <- "black"
-app.color.secondary <- "grey"
+app.color.primary <- "#000000"
+app.color.secondary <- "#696969"
+app.color.ternary <- "#C0C0C0"
 
 app.table.save <- function(tbl, name) {
   writeLines(tbl, paste("cache/", name, ".tex", sep = ""))

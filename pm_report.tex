@@ -1,0 +1,91 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[tmargin=2cm, bmargin=1.5cm, lmargin=2cm, rmargin=1.5cm]{geometry}
+%\usepackage{parskip}
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\title{Indicadores Fiscais e Gerenciais da Prefeitura Municipal}
+\author{Everton da Rosa - Contador - CRC RS-076595/O-3}
+\input{"cache/data.tex"}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este relatório tem o objetivo de apresentar os principais indicadores legais e gerenciais relativos à \textbf{Prefeitura} do Município de \textbf{Independência/RS}.
+
+Os valores expressos englobam o Poder Executivo, excetuado o RPPS, a não ser que seja especificado diferente.
+
+\end{abstract}
+
+\tableofcontents
+
+\chapter{IndicadoresLegais}
+
+Esta seção apresenta os principais indicadores estabelecidos em legislação aos quais o Poder Executivo precisa obedecer, ainda que o seu acompanhamento mensal atenda à função gerencial, possibilitando a tomada de providências quando houver indicação de possível desatendimento de algum dos limites impostos.
+
+
+\input{"tex_templates/pm/mde.tex"}
+\input{"tex_templates/pm/fundeb.tex"}
+\input{"tex_templates/pm/asps.tex"}
+\input{"tex_templates/pm/dtp.tex"}
+\input{"tex_templates/pm/suplementacao.tex"}
+\input{"tex_templates/pm/receita_despesas_limite.tex"}
+
+
+\chapter{Indicadores Gerenciais}
+
+Nesta seção estão apresentados alguns indicadores de cunho gerencial com a finalidade de auxiliar a gestão da Prefeitura nas decisões que envolvam aspectos contábeis, orçamentários e financeiros.
+
+\input{"tex_templates/pm/dotacao_folha.tex"}
+\input{"tex_templates/pm/dotacao_vale.tex"}
+\input{"tex_templates/pm/caixa_projetado.tex"}
+\input{"tex_templates/pm/superavit.tex"}
+
+\section{Receita}
+
+Nesta seção serão apresentadas informações sobre os principais grupos de receitas, comparando os desempenhos mensal e acumulados com os valores previstos para o ano corrente e os efetivamente arrecadados no ano anterior.
+
+Todos os valores são líquidos das deduções da receita.
+
+\input{"tex_templates/pm/receita_total.tex"}
+\input{"tex_templates/pm/receita_corrente.tex"}
+\input{"tex_templates/pm/receita_propria.tex"}
+\input{"tex_templates/pm/receita_trans_corr.tex"}
+\input{"tex_templates/pm/receita_fpm.tex"}
+\input{"tex_templates/pm/receita_icms.tex"}
+\input{"tex_templates/pm/receita_transf_fundeb.tex"}
+\input{"tex_templates/pm/receita_transf_corr_saude.tex"}
+\input{"tex_templates/pm/receita_transf_corr_educacao.tex"}
+\input{"tex_templates/pm/receita_transf_corr_assist.tex"}
+\input{"tex_templates/pm/receita_transf_corr_fed.tex"}
+\input{"tex_templates/pm/receita_transf_corr_est.tex"}
+
+\section{Despesa}
+
+Nesta seção serão apresentadas informações sobre os principais grupos de despesa, comparando os desempenhos mensal e acumulados com os valores previstos para o ano corrente e empenhados e os liquidados no ano anterior.
+
+\input{"tex_templates/pm/despesa_total.tex"}
+\input{"tex_templates/pm/despesa_corr.tex"}
+\input{"tex_templates/pm/despesa_pessoal.tex"}
+
+\vspace{16pt}
+
+\begin{center}
+	Independência, RS, \today
+\end{center}
+
+\vspace{36pt}
+
+\begin{center}
+	EVERTON DA ROSA\\
+	Contador\\
+	CRC RS-076595/O-3
+\end{center}
+\end{document}
