@@ -1,4 +1,4 @@
-# Gerador de tabelas para indicadores: câmara de vereadores
+# Gerador de tabelas para indicadores: prefeitura
 
 if(!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
@@ -21,19 +21,9 @@ ano_anterior <- ano_base - 1
 writeLines(paste("\\date{", periodo, "}", sep = ""), "cache/data.tex")
 writeLines(paste("indicadores pm ", format(data_base, format = "%Y-%m"), ".pdf", sep = ""), "cache/arquivo.txt")
 
-# Este relatório tem o objetivo de apresentar os principais indicadores legais e gerenciais relativos à **Prefeitura Municipal** do Município de **Independência/RS**.
-
 # Indicadores Legais
   
-# Esta seção apresenta os principais indicadores estabelecidos em legislação aos quais o Poder Executivo precisa obedecer, ainda que o seu acompanhamento mensal atenda à função gerencial, possibilitando a tomada de providências quando houver indicação de possível desatendimento de algum dos limites impostos.
-
 ## Aplicação de Recursos de Impostos e Transferências de Impostos em Manutenção e Desenvolvimento do Ensino
-
-# A Constituição Federal estabeleceu que os Municípios devem aplicar um mínimo de 25% da sua receita de impostos e transferências decorrentes de impostos na manutenção e desenvolvimento do ensino (MDE).
-# 
-# > Art. 212. A União aplicará, anualmente, nunca menos de dezoito, e os Estados, o Distrito Federal e os Municípios vinte e cinco por cento, no mínimo, da receita resultante de impostos, compreendida a proveniente de transferências, na manutenção e desenvolvimento do ensino.
-# 
-# Em decorrência desse mandamento constitucional, mensalmente é apurado o respectivo índice de gastos com fins de acompanhamento, sendo que é o índice ao final do exercício o que determina o adimplemento ou não da regra constitucional.
 
 
 df <- readxl::read_excel(ds_file, sheet = "MDE")
@@ -50,7 +40,6 @@ data <- spread(data, Ano, Índice)
 tbl = app.table.default(data, align=c("l", "r"), caption = "Evolução do índice de MDE", col.names = colnames(data))
 app.table.save(tbl, 'pm_mde_1')
 
-# O índice é apurado de acordo com as disposições do TCE/RS.
 
 data <- select(df, mes, indice,	minimo, ano)
 g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
@@ -66,17 +55,6 @@ app.plot.save('pm_mde_1', g)
 
 ## Aplicação dos Recursos Recebidos do FUNDEB na Remuneração dos Profissionais da Educação
 
-# O FUNDEB constitui um importante meio de financiamento da educação pública brasileira e tem, entre outras, a função de promover a valorização dos profissionais da educação, em especial o Magistérios.
-# 
-# Nesse condão, a Constituição Federal determina que um mínimo de 70% dos recursos recebidos do FUNDEB em cada ano seja aplicado na remuneração dos profissionais da educação.
-# 
-# > Art. 212-A. Os Estados, o Distrito Federal e os Municípios destinarão parte dos recursos a que se refere o caput do art. 212 desta Constituição à manutenção e ao desenvolvimento do ensino na educação básica e à remuneração condigna de seus profissionais, respeitadas as seguintes disposições: (Incluído pela Emenda Constitucional nº 108, de 2020)    Regulamento
-# > 
-#   > [...]
-# > XI - proporção não inferior a 70% (setenta por cento) de cada fundo referido no inciso I do caput deste artigo, excluídos os recursos de que trata a alínea "c" do inciso V do caput deste artigo, será destinada ao pagamento dos profissionais da educação básica em efetivo exercício, observado, em relação aos recursos previstos na alínea "b" do inciso V do caput deste artigo, o percentual mínimo de 15% (quinze por cento) para despesas de capital; (Incluído pela Emenda Constitucional nº 108, de 2020)
-# 
-# Em decorrência desse mandamento constitucional, mensalmente é apurado o respectivo índice com fins de acompanhamento, sendo que é o índice ao final do exercício o que determina o adimplemento ou não da regra constitucional.
-
 df <- readxl::read_excel(ds_file, sheet = "FUNDEB")
 df$ano <- format(df$data_base, format = "%Y")
 df$mes <- as.factor(format(df$data_base, format = "%b"))
@@ -91,7 +69,6 @@ data <- spread(data, Ano, Índice)
 tbl = app.table.default(data, align=c("l", "r"), caption = "Evolução do índice de aplicação do FUNDEB na remuneração da Educação", col.names = colnames(data))
 app.table.save(tbl, 'pm_fundeb_1')
 
-# O índice é apurado de acordo com as disposições do TCE/RS.
 
 data <- select(df, mes, indice,	minimo, ano)
 g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
@@ -105,13 +82,6 @@ g <- app.plot.theming(g)
 app.plot.save('pm_fundeb_1', g)
 
 ## Aplicação de Recursos de Impostos e Transferências de Impostos em Ações e Serviços Públicos de Saúde
-
-# A Lei Complementar nº 141/2012 estabeleceu que os Municípios devem aplicar um mínimo de 15% da sua receita de impostos e transferências decorrentes de impostos em ações e serviços públicos em saúde (ASPS).
-# 
-# > Art. 7º Os Municípios e o Distrito Federal aplicarão anualmente em ações e serviços públicos de saúde, no mínimo, 15% (quinze por cento) da arrecadação dos impostos a que se refere o art. 156 e dos recursos de que tratam o art. 158 e a alínea “b” do inciso I do caput e o § 3º do art. 159, todos da Constituição Federal.
-# 
-# Em decorrência desse mandamento legal, mensalmente é apurado o respectivo índice de gastos com fins de acompanhamento, sendo que é o índice ao final do exercício o que determina o adimplemento ou não da regra constitucional.
-
 
 df <- readxl::read_excel(ds_file, sheet = "ASPS")
 df$ano <- format(df$data_base, format = "%Y")
@@ -127,7 +97,6 @@ data <- spread(data, Ano, Índice)
 tbl = app.table.default(data, align=c("l", "r"), caption = "Evolução do índice de ASPS", col.names = colnames(data))
 app.table.save(tbl, 'pm_asps_1')
 
-# O índice é apurado de acordo com as disposições do TCE/RS.
 
 data <- select(df, mes, indice,	minimo, ano)
 g <- ggplot(data, aes(x = mes, group = ano, fill = ano)) +
@@ -143,9 +112,6 @@ app.plot.save('pm_asps_1', g)
 
 ## Limite de Despesa Total com Pessoal da LRF
 
-# A Lei Complementar nº 101/2000 – Lei de Responsabilidade Fiscal/LRF – estabelece limites para a despesa total com pessoal do Poder Executivo (art. 19 e 20) em percentual sobre a Receita Corrente Líquida.
-# 
-# Além disso, a LRF estabelece limites prudencial e de alerta os quais correspondem a 90% e 95% do limite máximo, que para o Poder Legislativo é de 54% da Receita Corrente Líquida.
 
 df <- readxl::read_excel(ds_file, sheet = "PessoalLRF")
 df$ano <- format(df$data_base, format = "%Y")
@@ -158,8 +124,6 @@ data$indice <- percent(data$indice, accuracy = 0.01, big.mark = ".", decimal.mar
 colnames(data) <- c("Mês", "Índice")
 tbl = app.table.default(data, align=c("l", "r"), caption = "Evolução do índice de Despesa Total com Pessoal", col.names = colnames(data))
 app.table.save(tbl, 'pm_dtp_1')
-
-# Os valores de RCL e Despesa Total com Pessoal utilizados para a apuração do índice são calculados conforme as disposições do TCE/RS.
 
 
 g <- ggplot(df, aes(x = mes, group = 1)) +
@@ -179,12 +143,6 @@ app.plot.save('pm_dtp_1', g)
 
 ## Limite de Suplementação Autorizado na Lei Orçamentária Anual
 
-# Tendo por base o § 8º do art. 165 da Constituição Federal, a Lei Orçamentária Anual traz em seu artigo 7º a autorização para abertura de créditos suplementares no Poder Executivo (incluído o RPPS), limitado a 15% da dotação inicial desse Poder.
-# 
-# Por sua vez, o art. 8º da Lei Orçamentária Anual elenca situações as quais os créditos abertos com base na autorização do art. 7º da LOA não oneram esse limite.
-# 
-# Desta forma, a cada decreto de abertura de crédito amparada nessa autorização, é feito o acompanhamento dos valores onerados do limite do Executivo, o qual tem sua evolução apresentada na seguinte figura:
-  
 df <- readxl::read_excel(ds_file, sheet = "Suplementacao", skip = 11)
 df$ano <- format(df$data_base, format = "%Y")
 df$mes <- as.factor(format(df$data_base, format = "%b"))
@@ -197,8 +155,6 @@ data$perc_esperado <- percent(data$perc_esperado, accuracy = 0.01, big.mark = ".
 colnames(data) <- c("Mês", "Valor autorizado", "Valor utilizado", "Valor disponível", "Limite utilizado", "Limite esperado")
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r", "r"), caption = "Limite de suplementação autorizado na LOA", col.names = colnames(data))
 app.table.save(tbl, 'pm_suplementacao_1')
-
-# O *limite esperado* é calculado através da média mensal multiplicado pelo número de meses transcorridos, de forma a demonstrar o quanto do limite total seria onerado caso sua utilização fosse uniformemente distribuída no decorrer dos meses.
 
 
 data <- select(df, mes, perc_esperado, perc_utilizado, perc_limite)
@@ -231,16 +187,6 @@ app.plot.save('pm_suplementacao_2', g)
 
 ## Limite da Despesa Corrente como Proporção da Receita Corrente
 
-# A Constituição Federal impôs vedações aos entes que, num exercício financeiro, apresentarem uma relação entre despesa e receita correntes superior a 95%.
-# 
-# > Art. 167-A. Apurado que, no período de 12 (doze) meses, a relação entre despesas correntes e receitas correntes supera 95% (noventa e cinco por cento), no âmbito dos Estados, do Distrito Federal e dos Municípios, é facultado aos Poderes Executivo, Legislativo e Judiciário, ao Ministério Público, ao Tribunal de Contas e à Defensoria Pública do ente, enquanto permanecer a situação, aplicar o mecanismo de ajuste fiscal de vedação da: (Incluído pela Emenda Constitucional nº 109, de 2021)
-# > 
-#   > [...]
-# > 
-#   > § 1º Apurado que a despesa corrente supera 85% (oitenta e cinco por cento) da receita corrente, sem exceder o percentual mencionado no caput deste artigo, as medidas nele indicadas podem ser, no todo ou em parte, implementadas por atos do Chefe do Poder Executivo com vigência imediata, facultado aos demais Poderes e órgãos autônomos implementá-las em seus respectivos âmbitos. (Incluído pela Emenda Constitucional nº 109, de 2021)
-# 
-# Desta forma, esta seção apresenta o cálculo considerando a administração consolidada (Executivo, RPPS e Legislativo), conforme a metodologia do TCE/RS.
-
 df <- readxl::read_excel(ds_file, sheet = "ReceitaDespesaCorrentes", skip = 14)
 df$ano <- format(df$data_base, format = "%Y")
 df$mes <- as.factor(format(df$data_base, format = "%b"))
@@ -270,11 +216,7 @@ app.plot.save('pm_receita_despesas_limite_1', g)
 
 # Indicadores Gerenciais
 
-# Nesta seção estão apresentados alguns indicadores de cunho gerencial com a finalidade de auxiliar a gestão da Prefeitura nas decisões que envolvam aspectos contábeis, orçamentários e financeiros.
-
 ## Resultado da Dotação de Pessoal e Encargos Sociais
-
-# A folha de pagamentos e seus encargos corresponde a parcela relevante e pouco elástica e determinística da despesa pública, o que significa dizer que há pouco o que fazer para sua redução. Essa característica faz com que seja imperioso monitoramento da dotação disponível para essa despesa.
 
 
 df <- readxl::read_excel(ds_file, sheet = "DotacaoFolha", skip = 42)
@@ -288,9 +230,6 @@ data <- select(df, mes, com_contratos, sem_contratos)
 colnames(data) <- c("Mês", "com Contratos", "sem Contratos")
 tbl = app.table.default(data, align=c("l", "r", "r"), caption = "Superávit/Déficit da Dotação de Pessoal e Encargos Sociais", col.names = colnames(data))
 app.table.save(tbl, 'pm_dotacao_folha_1')
-
-
-  # Os valores apresentados são estimativos e ora levam em consideração as despesas com contratos temporários, ora expurgam seus efeitos.
 
 
 data <- select(df, mes, com_contratos, sem_contratos)
@@ -308,11 +247,7 @@ g <- app.plot.theming(g)
 app.plot.save('pm_dotacao_folha_1', g)
 
 
-# É importante salientar que, embora os valores apresentados sejam estimativos e resultem da utilização de médias, isso não afasta o caráter orientativo quanto a necessidade mais imediata e urgente de providências quanto maior for o déficit apresentado.
-
 ## Resultado da Dotação do Auxílio-Alimentação
-
-# Similarmente à dotação da folha de pagamentos e seus encargos, a dotação para auxílio-alimentação dos servidores também apresenta a característica de ser pouco elástica e determinística, o que significa dizer que há pouco o que fazer para sua redução. Essa característica faz com que seja imperioso monitoramento da dotação disponível para essa despesa.
 
 df <- readxl::read_excel(ds_file, sheet = "DotacaoVale", skip = 13)
 df$ano <- format(df$data_base, format = "%Y")
@@ -340,11 +275,6 @@ app.plot.save('pm_dotacao_vale_1', g)
 
 ## Saldo de Caixa Projetado
 
-# Este indicador busca da avaliação da programação financeira e do cronograma de desembolso os valores de caixa projetado de recursos próprios e total (excluindo-se o RPPS) a fim de oferecer um indicativo sobre eventual superávit ou déficit financeiro ao findar do exercício.
-
-# O saldo de caixa projetado é apurado considerando o saldo de exercício anterior, a receita reestimada, a dotação atualizada e os restos a pagar, além de outros valores que influenciam na disponibilidade financeira.
-
-# Os recursos próprios correspondem às fontes 0001 Livre, 0020 MDE e 0040 ASPS, sendo que o valor apresentado é o descontado da insuficiência financeira nas demais fontes de recursos.
 
 df <- readxl::read_excel(ds_file, sheet = "CaixaProjetado")
 df$ano <- format(df$data_base, format = "%Y")
@@ -357,8 +287,6 @@ data <- select(df, mes, total, proprio)
 colnames(data) <- c("Mês", "Recurso próprio", "Total (exceto RPPS)")
 tbl = app.table.default(data, align=c("l", "r", "r"), caption = "Saldo de caixa projetado", col.names = colnames(data))
 app.table.save(tbl, 'pm_caixa_projetado_1')
-
-# Obviamente que valores positivos indicam tendência ao superávit financeiro, enquanto valores negativos indicam uma tendência a ocorrência de déficit financeiro no encerramento do exercício.
 
 
 data <- select(df, mes, total, proprio)
@@ -377,12 +305,6 @@ app.plot.save('pm_caixa_projetado_1', g)
 
 
 ## Superávit/Déficit Financeiro Atual
-
-# Enquanto o indicador de saldo de caixa projetado trabalha com valores estimados para o encerramento do exercício financeiro, este indicador demonstra o montante de recursos financeiros atualmente disponíveis para empenho.
-
-# O superávit atual (ou déficit, se negativo) representa o quanto de recursos financeiros estão desembaraçados ao final do mês e disponível para utilização.
-
-# O valor é obtido através do saldo financeiro reduzido dos empenhos a liquidar, inclusive de restos a pagar não processados, e diminuído do resultado extra-orçamentário.
 
 
 df <- readxl::read_excel(ds_file, sheet = "Superavit", skip = 4)
@@ -409,10 +331,6 @@ app.plot.save('pm_superavit_1', g)
 
 ## Receita
 
-# Nesta seção serão apresentadas informações sobre os principais grupos de receitas, comparando os desempenhos mensal e acumulados com os valores previstos para o ano corrente e os efetivamente arrecadados no ano anterior.
-
-# Todos os valores são líquidos das deduções da receita.
-
 ### Receita Total
 
 df <- readxl::read_excel(ds_file, sheet = "ReceitaTotal", skip = 2)
@@ -433,6 +351,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Receita Total: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_total_3')
 
 data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
@@ -483,6 +402,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Receita Corrente: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_corrente_3')
 
 data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
@@ -537,6 +457,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Arrecadação Própria: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_propria_3')
 
 data <- select(df, mes, arrec_mes_ant, arrec_mes_atual, prev_mes_atual)
@@ -590,6 +511,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_trans_corr_3')
 
 
@@ -645,6 +567,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "FPM - cota mensal: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_fpm_3')
 
 
@@ -699,6 +622,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "ICMS: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_icms_3')
 
 
@@ -755,6 +679,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferência do FUNDEB: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_transf_fundeb_3')
 
 
@@ -809,6 +734,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes da Saúde: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_transf_corr_saude_3')
 
 
@@ -863,6 +789,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes da Educação: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_transf_corr_educacao_3')
 
 
@@ -916,6 +843,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes da Assistência Social: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_transf_corr_assist_3')
 
 
@@ -970,6 +898,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes Federais: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_transf_corr_fed_3')
 
 
@@ -1024,6 +953,7 @@ data$var_ant <- percent(data$var_ant, big.mark = ".", decimal.mark = ",", accura
 data$var_prev <- percent(data$var_prev, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
 colnames(data) <- c("Mês", paste(ano_base, "(-)", ano_anterior), paste("Arrecadado (-) Previsto", ano_base), paste(ano_base, "/", ano_anterior, "(%)"), paste("Arrecadado / Previsto", ano_base, "(%)"))
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Transferências Correntes Estaduais: Excesso/Frustração", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_receita_transf_corr_est_3')
 
 
@@ -1080,6 +1010,7 @@ data$perc_emp_prev <- percent(data$perc_emp_prev, accuracy = 0.01, big.mark = ".
 data$perc_liq_prev <- percent(data$perc_liq_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 colnames(data) <- c("Mês", "Empenhado (-) Previsto", "Liquidado (-) Previsto", "Empenhado / Previsto", "Liquidado / Previsto")
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Despesa Total: previsto x despesa", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_despesa_total_3')
 
 
@@ -1090,8 +1021,7 @@ colnames(data) <- c("Mês", "Arrecadado", "Empenhado / Arrecadado", "Liquidado /
 tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Total: arrecadação x despesa", col.names = colnames(data))
 app.table.save(tbl, 'pm_despesa_total_4')
 
-# *Comparado com a arrecadação total*
-  
+
 data <- select(df, mes, emp_mes, liq_mes, prev_mes)
 colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
 data <- gather(data, tipo, valor, c("Empenhado", "Liquidado", "Previsto"))
@@ -1134,8 +1064,7 @@ g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
 g <- app.plot.theming(g)
 app.plot.save('pm_despesa_total_3', g)
 
-# *Comparado com a arrecadação total*
-  
+
 ### Despesa Corrente
   
 
@@ -1158,6 +1087,7 @@ data$perc_emp_prev <- percent(data$perc_emp_prev, accuracy = 0.01, big.mark = ".
 data$perc_liq_prev <- percent(data$perc_liq_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 colnames(data) <- c("Mês", "Empenhado (-) Previsto", "Liquidado (-) Previsto", "Empenhado / Previsto", "Liquidado / Previsto")
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Despesa Corrente: previsto x despesa", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_despesa_corr_3')
 
 
@@ -1168,7 +1098,6 @@ colnames(data) <- c("Mês", "Arrecadado", "Empenhado / Arrecadado", "Liquidado /
 tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa Corrente: arrecadação x despesa", col.names = colnames(data))
 app.table.save(tbl, 'pm_despesa_corr_4')
 
-# *Comparado com a receita corrente*
 
 data <- select(df, mes, emp_mes, liq_mes, prev_mes)
 colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
@@ -1212,8 +1141,6 @@ g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
 g <- app.plot.theming(g)
 app.plot.save('pm_despesa_corr_3', g)
 
-# *Comparado com a receita corrente*
-
 
 ### Despesa com Pessoal e Encargos Sociais
   
@@ -1237,6 +1164,7 @@ data$perc_emp_prev <- percent(data$perc_emp_prev, accuracy = 0.01, big.mark = ".
 data$perc_liq_prev <- percent(data$perc_liq_prev, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
 colnames(data) <- c("Mês", "Empenhado (-) Previsto", "Liquidado (-) Previsto", "Empenhado / Previsto", "Liquidado / Previsto")
 tbl = app.table.default(data, align=c("l", "r", "r", "r", "r"), caption = "Despesa com Pessoal e Encargos Sociais: previsto x despesa", col.names = colnames(data))
+tbl <- column_spec(tbl, 2:5, width = "3.2cm")
 app.table.save(tbl, 'pm_despesa_pessoal_3')
 
 
@@ -1247,8 +1175,6 @@ colnames(data) <- c("Mês", "Arrecadado", "Empenhado / Arrecadado", "Liquidado /
 tbl = app.table.default(data, align=c("l", "r", "r", "r"), caption = "Despesa com Pessoal e Encargos Sociais: arrecadação x despesa", col.names = colnames(data))
 app.table.save(tbl, 'pm_despesa_pessoal_4')
 
-# *Comparado com a receita corrente*
-  
 
 data <- select(df, mes, emp_mes, liq_mes, prev_mes)
 colnames(data) <- c("Mês", "Empenhado", "Liquidado", "Previsto")
@@ -1290,5 +1216,3 @@ g <- ggplot(data, aes(x = Mês, group = tipo, linetype = tipo)) +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
 g <- app.plot.theming(g)
 app.plot.save('pm_despesa_pessoal_3', g)
-
-# *Comparado com a receita corrente*
