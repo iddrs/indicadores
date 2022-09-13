@@ -133,7 +133,7 @@ g <- ggplot(df, aes(x = mes, group = 1)) +
   geom_line(aes(y = legal, linetype = "Limite"), na.rm = TRUE) +
   geom_line(aes(y = alerta, linetype = "Alerta"), na.rm = TRUE) +
   geom_line(aes(y = prudencial, linetype = "Prudencial"), na.rm = TRUE) +
-  scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ",")) +
+  scale_y_continuous(labels = scales::percent_format(big.mark = ".", decimal.mark = ","), limits = c(0,0.7)) +
   scale_x_discrete(limits = df$mes) +
   scale_fill_manual(values = app.color.primary) +
   scale_linetype_manual(values = c("dashed", "solid", "dotted"))
